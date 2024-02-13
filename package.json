@@ -1,0 +1,49 @@
+{
+	"name": "nest-mongo-transaction-decorator",
+	"version": "0.0.1",
+	"description": "Your package description",
+	"types": "./dist/index.d.ts",
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"files": [
+		"dist/"
+	],
+	"scripts": {
+		"build": "tsc",
+		"build:watch": "tsc -w",
+		"lint": "eslint --ignore-path .gitignore --ext .ts src/",
+		"lint:fix": "npm run lint -- --fix",
+		"format": "prettier --write ."
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/yrahate7/nest-mongo-transaction-decorator.git"
+	},
+	"keywords": [
+		"nestjs",
+		"mongoose",
+		"transaction",
+		"decorator"
+	],
+	"author": "Yash Rahate",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/yrahate7/nest-mongo-transaction-decorator/issues"
+	},
+	"homepage": "https://github.com/yrahate7/nest-mongo-transaction-decorator#readme",
+	"dependencies": {
+		"@nestjs/common": "^10.3.3",
+		"axios": "^1.6.7",
+		"mongoose": "^8.1.2",
+		"reflect-metadata": "^0.2.1",
+		"rxjs": "^7.8.1",
+		"standard-version": "^9.5.0",
+		"typia": "^5.4.8"
+	},
+	"devDependencies": {
+		"@types/node": "^20.11.17",
+		"eslint": "^7.30.0",
+		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-prettier": "^3.4.0"
+	}
+}
