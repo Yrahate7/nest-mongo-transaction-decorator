@@ -3,16 +3,18 @@ import {
 	CallHandler,
 	ExecutionContext,
 	HttpException,
+	Inject,
 	Injectable,
 	InternalServerErrorException,
 	Logger,
 	NestInterceptor,
 } from "@nestjs/common";
-import { Observable, catchError, tap, throwError } from "rxjs";
+import { Observable, catchError, of, tap, throwError } from "rxjs";
 import { createParamDecorator } from "@nestjs/common";
-import { ClientSession, ClientSessionOptions, MongooseError, connections } from "mongoose";
+import mongoose, { ClientSession, ClientSessionOptions, MongooseError, connections } from "mongoose";
 import { isAxiosError } from "axios";
 import { TypeGuardError } from "typia";
+import { getConnectionToken } from "kindagoose";
 
 export class TransactionsTemplate {
 	sessionOptions?: ClientSessionOptions;
@@ -71,25 +73,27 @@ export class TransactionInstance extends TransactionsTemplate {
 export class TransactionInterceptor implements NestInterceptor {
 	private readonly logger = new Logger(TransactionInterceptor.name);
 
-	private readonly transactionsToBeGeneratedInInterceptor: TransactionInstance[];
+	private readonly transactionsToBeGeneratedInInterceptor: TransactionInstance[] = [];
 
-	constructor(transactions: TransactionsTemplate[] = []) {
-		const transactionNames = transactions.map(transaction => transaction.name);
-		const duplicateNames = transactionNames.filter((name, index) => transactionNames.indexOf(name) !== index);
-		if (duplicateNames.length > 0) {
-			throw Error("Duplicate transaction names found in the interceptor");
-		}
-		this.transactionsToBeGeneratedInInterceptor = transactions;
+	constructor(
+		@Inject(getConnectionToken())
+		private readonly databaseGlobalConnection: mongoose.Connection
+	) {
+		// const transactionNames = transactions.map(transaction => transaction.name);
+		// const duplicateNames = transactionNames.filter((name, index) => transactionNames.indexOf(name) !== index);
+		// if (duplicateNames.length > 0) {
+		// 	throw Error("Duplicate transaction names found in the interceptor");
+		// }
+		// this.transactionsToBeGeneratedInInterceptor = transactions;
 	}
 
 	private getConnection() {
 		// TODO check on test environment
-		if (connections.length === 0) {
+		if (!this.databaseGlobalConnection) {
 			throw new Error("No connections found");
 		}
-		return connections[connections.length - 1];
+		return this.databaseGlobalConnection;
 	}
-
 	/**
 	 * Generate transactions for the request
 	 * Does not generate transactions if the environment is test
@@ -136,9 +140,8 @@ export class TransactionInterceptor implements NestInterceptor {
 					await this.commitAllTransactions(transactions);
 					await this.endAllSessions(transactions);
 				}),
-				catchError(async e => {
-					await this.handleTransactionExceptions(transactions, e);
-				})
+				catchError( e => this.handleTransactionExceptions(transactions,e)
+				)
 			);
 		} catch (e) {
 			return next
@@ -154,7 +157,7 @@ export class TransactionInterceptor implements NestInterceptor {
 		);
 	}
 
-	private async handleTransactionExceptions(transactions: TransactionInstance[], e: Error) {
+	private async handleTransactionExceptions(transactions: TransactionInstance[],e:any) {
 		const promiseMap = transactions.map(transaction => transaction.session!.abortTransaction());
 		await Promise.allSettled(promiseMap).catch((rollbackError: Error) =>
 			this.logger.error(`Could not rollback transaction: ${rollbackError.toString()}`)
@@ -174,9 +177,7 @@ export class TransactionInterceptor implements NestInterceptor {
 }
 
 export const handleNestException = e => {
-	if (e instanceof HttpException) {
-		return e;
-	} else if (e instanceof MongooseError) {
+	if (e instanceof MongooseError) {
 		return new InternalServerErrorException(e.message, {
 			cause: e.message,
 			description: e.stack,
@@ -192,10 +193,7 @@ export const handleNestException = e => {
 			description: e.message,
 		});
 	} else {
-		return new InternalServerErrorException(e.message, {
-			cause: e,
-			description: e.message,
-		});
+		return e; // Nestjs will handle the error
 	}
 };
 /**
