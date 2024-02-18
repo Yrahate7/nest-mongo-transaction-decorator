@@ -115,6 +115,9 @@ export class TransactionInterceptor implements NestInterceptor {
 			transactionsArray.push(dbTransaction);
 		} else {
 			for (const transaction of transactionsToBeGeneratedInInterceptor) {
+				if(!transaction.sessionOptions){
+					transaction.sessionOptions = TransactionsTemplate.defaultSessionOptions;
+				}
 				const session = await this.getConnection().startSession(transaction.sessionOptions);
 				session.startTransaction(transaction.sessionOptions!.defaultTransactionOptions);
 				transaction.session = session;
@@ -213,9 +216,9 @@ export const TransactionParam = createParamDecorator((_data = "default", context
 
 export class TransactionFactory implements  NestInterceptor{
 	
-	private readonly transactionsToGenerate :TransactionInstance[] = [];
+	private readonly transactionsToGenerate :TransactionsTemplate[] = [];
 	constructor(
-		transactionsToGenerate :TransactionInstance[]
+		transactionsToGenerate :TransactionsTemplate[]=[]
 	){
 		const transactionNames = transactionsToGenerate.map(transaction => transaction.name);
 		const duplicateNames = transactionNames.filter((name, index) => transactionNames.indexOf(name) !== index);
@@ -225,7 +228,7 @@ export class TransactionFactory implements  NestInterceptor{
 		
 		this.transactionsToGenerate = transactionsToGenerate;
 	}
-	intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
+	async intercept(context: ExecutionContext, next: CallHandler<any>) {
 		const httpContext = context.switchToHttp();
 		const req = httpContext.getRequest();
 		req.transactionsToGenerate = this.transactionsToGenerate;
