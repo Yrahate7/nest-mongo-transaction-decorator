@@ -129,7 +129,7 @@ export class TransactionInterceptor implements NestInterceptor {
 		const req = httpContext.getRequest();
 
 		try {
-			const transactions = await this.generateTransactions();
+			const transactions = await this.generateTransactions(req?.transactionsToGenerate ?? []);
 			req.transactions = transactions;
 			req.isUsingTransaction = true;
 
