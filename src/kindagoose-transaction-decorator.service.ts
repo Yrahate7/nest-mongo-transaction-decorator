@@ -73,8 +73,6 @@ export class TransactionInstance extends TransactionsTemplate {
 export class TransactionInterceptor implements NestInterceptor {
 	private readonly logger = new Logger(TransactionInterceptor.name);
 
-	private readonly transactionsToBeGeneratedInInterceptor: TransactionInstance[] = [];
-
 	constructor(
 		@Inject(getConnectionToken())
 		private readonly databaseGlobalConnection: mongoose.Connection
@@ -84,7 +82,7 @@ export class TransactionInterceptor implements NestInterceptor {
 		// if (duplicateNames.length > 0) {
 		// 	throw Error("Duplicate transaction names found in the interceptor");
 		// }
-		// this.transactionsToBeGeneratedInInterceptor = transactions;
+		// transactionsToBeGeneratedInInterceptor = transactions;
 	}
 
 	private getConnection() {
@@ -99,13 +97,13 @@ export class TransactionInterceptor implements NestInterceptor {
 	 * Does not generate transactions if the environment is test
 	 * @returns TransactionInstance[]
 	 */
-	private async generateTransactions() {
+	private async generateTransactions(transactionsToBeGeneratedInInterceptor: TransactionInstance[] = []) {
 		const transactionsArray: TransactionInstance[] = [];
 		if (process.env.NODE_ENV === "test") {
 			return transactionsArray;
 		}
 
-		if (this.transactionsToBeGeneratedInInterceptor.length === 0) {
+		if (transactionsToBeGeneratedInInterceptor.length === 0) {
 			const dbTransaction: TransactionInstance = {
 				session: null,
 				sessionOptions: TransactionsTemplate.defaultSessionOptions,
@@ -116,7 +114,7 @@ export class TransactionInterceptor implements NestInterceptor {
 			dbTransaction.session = session;
 			transactionsArray.push(dbTransaction);
 		} else {
-			for (const transaction of this.transactionsToBeGeneratedInInterceptor) {
+			for (const transaction of transactionsToBeGeneratedInInterceptor) {
 				const session = await this.getConnection().startSession(transaction.sessionOptions);
 				session.startTransaction(transaction.sessionOptions!.defaultTransactionOptions);
 				transaction.session = session;
@@ -211,3 +209,27 @@ export const TransactionParam = createParamDecorator((_data = "default", context
 	}
 	return req.transactions?.find(transaction => transaction.name === _data)?.session || null;
 });
+
+
+export class TransactionFactory implements  NestInterceptor{
+	
+	private readonly transactionsToGenerate :TransactionInstance[] = [];
+	constructor(
+		transactionsToGenerate :TransactionInstance[]
+	){
+		const transactionNames = transactionsToGenerate.map(transaction => transaction.name);
+		const duplicateNames = transactionNames.filter((name, index) => transactionNames.indexOf(name) !== index);
+		if (duplicateNames.length > 0) {
+			throw Error("Duplicate transaction names found in the interceptor");
+		}
+		
+		this.transactionsToGenerate = transactionsToGenerate;
+	}
+	intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
+		const httpContext = context.switchToHttp();
+		const req = httpContext.getRequest();
+		req.transactionsToGenerate = this.transactionsToGenerate;
+		return next.handle();
+		
+	}
+}
