@@ -2176,7 +2176,7 @@ __metadata:
     reflect-metadata: ^0.2.1
     rxjs: ^7.8.1
     standard-version: ^9.5.0
-    typia: ^5.4.8
+    typia: ^5.5.7
   languageName: unknown
   linkType: soft
 
@@ -2652,7 +2652,7 @@ __metadata:
 
 "resolve@patch:resolve@^1.10.0#~builtin<compat/resolve>":
   version: 1.22.8
-  resolution: "resolve@patch:resolve@npm%3A1.22.8#~builtin<compat/resolve>::version=1.22.8&hash=c3c19d"
+  resolution: "resolve@patch:resolve@npm%3A1.22.8#~builtin<compat/resolve>::version=1.22.8&hash=07638b"
   dependencies:
     is-core-module: ^2.13.0
     path-parse: ^1.0.7
@@ -3133,9 +3133,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typia@npm:^5.4.8":
-  version: 5.4.8
-  resolution: "typia@npm:5.4.8"
+"typia@npm:^5.5.7":
+  version: 5.5.10
+  resolution: "typia@npm:5.5.10"
   dependencies:
     commander: ^10.0.0
     comment-json: ^4.2.3
@@ -3145,7 +3145,7 @@ __metadata:
     typescript: ">=4.8.0 <5.5.0"
   bin:
     typia: lib/executable/typia.js
-  checksum: 804a3251364344c5dfdb3148a7f7f8dba8570a7692253d2a4757214fb4903559d3b1c746009d67071bc4a1f25e7d4e92c4dd87b579331a1977ebb2c8b1188368
+  checksum: cac728ba6feb6e2171c4adf5316ad7fa5c52b137075c4068bb66ad780500dfec9b20727d0f5e3bc78183624833b25d7649280e6045af8221e348edcbf480c15b
   languageName: node
   linkType: hard
 
