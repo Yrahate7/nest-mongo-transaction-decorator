@@ -169,18 +169,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typegoose/typegoose@npm:^12.0.0":
-  version: 12.1.0
-  resolution: "@typegoose/typegoose@npm:12.1.0"
+"@typegoose/typegoose@npm:^12.2.0":
+  version: 12.3.1
+  resolution: "@typegoose/typegoose@npm:12.3.1"
   dependencies:
     lodash: ^4.17.20
-    loglevel: ^1.8.1
-    reflect-metadata: ^0.2.1
-    semver: ^7.5.4
+    loglevel: ^1.9.1
+    reflect-metadata: ^0.2.2
+    semver: ^7.6.0
     tslib: ^2.6.2
   peerDependencies:
-    mongoose: ~8.1.0
-  checksum: 88d5714b45eed7f7811d7a6f035b8aeb07deb70e6c9549a3f5e28dd6a9d4654166fdd43f7f766b3c4d25cff9cd570a801c02631d3ef7ff3cba601aca44086c60
+    mongoose: ~8.2.4
+  checksum: 3717c0813de63cdbcfa80e30e077e9d8ecea6450f6bf6403d5ad41b4b5fe6a0a44d41aaa37dbf4014aac946ec3dadf06bf9b88f313f4a10a08ea0de2cef95c14
   languageName: node
   linkType: hard
 
@@ -1929,7 +1929,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"loglevel@npm:^1.8.1":
+"loglevel@npm:^1.9.1":
   version: 1.9.1
   resolution: "loglevel@npm:1.9.1"
   checksum: e1c8586108c4d566122e91f8a79c8df728920e3a714875affa5120566761a24077ec8ec9e5fc388b022e39fc411ec6e090cde1b5775871241b045139771eeb06
@@ -2165,7 +2165,7 @@ __metadata:
   dependencies:
     "@nestjs/common": ^10.3.3
     "@nestjs/core": ^10.3.3
-    "@typegoose/typegoose": ^12.0.0
+    "@typegoose/typegoose": ^12.2.0
     "@types/node": ^20.11.17
     axios: ^1.6.7
     eslint: ^7.30.0
@@ -2602,6 +2602,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"reflect-metadata@npm:^0.2.2":
+  version: 0.2.2
+  resolution: "reflect-metadata@npm:0.2.2"
+  checksum: a66c7b583e4efdd8f3c3124fbff33da2d0c86d8280617516308b32b2159af7a3698c961db3246387f56f6316b1d33a608f39bb2b49d813316dfc58f6d3bf3210
+  languageName: node
+  linkType: hard
+
 "regexpp@npm:^3.1.0":
   version: 3.2.0
   resolution: "regexpp@npm:3.2.0"
@@ -2652,7 +2659,7 @@ __metadata:
 
 "resolve@patch:resolve@^1.10.0#~builtin<compat/resolve>":
   version: 1.22.8
-  resolution: "resolve@patch:resolve@npm%3A1.22.8#~builtin<compat/resolve>::version=1.22.8&hash=c3c19d"
+  resolution: "resolve@patch:resolve@npm%3A1.22.8#~builtin<compat/resolve>::version=1.22.8&hash=07638b"
   dependencies:
     is-core-module: ^2.13.0
     path-parse: ^1.0.7
@@ -2746,7 +2753,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^7.1.1, semver@npm:^7.2.1, semver@npm:^7.3.4, semver@npm:^7.5.4":
+"semver@npm:^7.1.1, semver@npm:^7.2.1, semver@npm:^7.3.4, semver@npm:^7.6.0":
   version: 7.6.0
   resolution: "semver@npm:7.6.0"
   dependencies:
