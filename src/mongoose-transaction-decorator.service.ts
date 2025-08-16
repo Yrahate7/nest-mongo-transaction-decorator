@@ -13,8 +13,7 @@ import { Observable, catchError, of, tap, throwError } from "rxjs";
 import { createParamDecorator } from "@nestjs/common";
 import mongoose, { ClientSession, ClientSessionOptions, MongooseError, connections } from "mongoose";
 import { isAxiosError } from "axios";
-import { TypeGuardError } from "typia";
-import { getConnectionToken } from "kindagoose";
+import { getConnectionToken } from "@nestjs/mongoose";
 
 export class TransactionsTemplate {
 	sessionOptions?: ClientSessionOptions;
@@ -187,11 +186,6 @@ export const handleNestException = e => {
 		return new InternalServerErrorException(e.message, {
 			cause: e.cause,
 			description: e.stack,
-		});
-	} else if (e instanceof TypeGuardError) {
-		return new BadRequestException(e.message, {
-			cause: e,
-			description: e.message,
 		});
 	} else {
 		return e; // Nestjs will handle the error

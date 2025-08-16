@@ -1,2 +1,2 @@
-export * from "./kindagoose-transaction-decorator.module";
-export * from "./kindagoose-transaction-decorator.service";
+export * from "./mongoose-transaction-decorator.module";
+export * from "./mongoose-transaction-decorator.service";
