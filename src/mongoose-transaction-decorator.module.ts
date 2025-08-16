@@ -4,10 +4,10 @@ import {
 	TransactionInterceptor,
 	TransactionParam,
 	TransactionsTemplate,
-} from "./kindagoose-transaction-decorator.service";
+} from "./mongoose-transaction-decorator.service";
 
 @Module({
 	providers: [],
 	exports: [TransactionInterceptor, TransactionParam, TransactionsTemplate, TransactionInstance],
 })
-export class KindagooseTransactionDecoratorModule {}
+export class MongooseTransactionDecoratorModule {}
